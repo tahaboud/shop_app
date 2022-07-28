@@ -32,8 +32,16 @@ class ProductItem extends StatelessWidget {
                           : Icons.favorite_border,
                       color: Colors.deepOrange,
                     ),
-                    onPressed: () {
-                      product.toggleFavoriteStatus();
+                    onPressed: () async {
+                      try {
+                        await product.toggleFavoriteStatus();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Item added to favorites"),
+                        ));
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Some thing went wrong")));
+                      }
                     },
                   )),
           title: Text(

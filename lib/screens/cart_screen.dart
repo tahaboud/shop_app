@@ -4,10 +4,17 @@ import '../providers/cart.dart' show Cart;
 import 'package:provider/provider.dart';
 import '../widgets/cart_item.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = "/cart";
+
   const CartScreen({Key? key}) : super(key: key);
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isLoading = false;
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
@@ -20,46 +27,64 @@ class CartScreen extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Spacer(),
-                    Chip(
-                      label: Text(
-                        "\$${cart.totalAmount.toStringAsFixed(2)}",
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .primaryTextTheme
-                                .titleMedium!
-                                .color),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total",
+                        style: TextStyle(fontSize: 20),
                       ),
-                      backgroundColor: Theme.of(context).primaryColor,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Provider.of<Orders>(
-                          context,
-                          listen: false,
-                        ).addOrder(
-                          cart.items.values.toList(),
-                          cart.totalAmount,
-                        );
-                        cart.clear();
-                      },
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateColor.resolveWith(
-                            (states) => Theme.of(context).primaryColor),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      child: const Text("ORDER NOW"),
-                    )
-                  ],
-                )),
+                      const Spacer(),
+                      Chip(
+                        label: Text(
+                          "\$${cart.totalAmount.toStringAsFixed(2)}",
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .primaryTextTheme
+                                  .titleMedium!
+                                  .color),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      TextButton(
+                        onPressed: (cart.totalAmount <= 0 || _isLoading)
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                try {
+                                  await Provider.of<Orders>(
+                                    context,
+                                    listen: false,
+                                  ).addOrder(
+                                    cart.items.values.toList(),
+                                    cart.totalAmount,
+                                  );
+                                  cart.clear();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Order placed")));
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text("Order failed to add")));
+                                }
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              },
+                        style: TextButton.styleFrom(
+                          onSurface: Colors.black,
+                          primary: Colors.purple,
+                        ),
+                        child: _isLoading
+                            ? CircularProgressIndicator()
+                            : Text("ORDER NOW"),
+                      ),
+                    ])),
           ),
           const SizedBox(height: 10),
           Expanded(
