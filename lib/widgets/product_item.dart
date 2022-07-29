@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import '../providers/auth.dart';
 import '../providers/cart.dart';
 import '../providers/product.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<Auth>(context, listen: false);
     return Card(
       clipBehavior: Clip.hardEdge,
       elevation: 2,
@@ -34,7 +36,9 @@ class ProductItem extends StatelessWidget {
                     ),
                     onPressed: () async {
                       try {
-                        await product.toggleFavoriteStatus();
+                        await product.toggleFavoriteStatus(
+                            authData.token as String,
+                            authData.userId as String);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Item added to favorites"),
                         ));

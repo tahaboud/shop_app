@@ -41,20 +41,27 @@ class _OrdersScreenState extends State<OrdersScreen> {
               Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
           builder: (ctx, dataSnapshot) {
             if (dataSnapshot.connectionState == ConnectionState.waiting)
-              return CircularProgressIndicator();
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             else {
               if (dataSnapshot.error != null)
                 return Center(
                   child: Text("An error occured"),
                 );
               else {
-                return Consumer<Orders>(
-                    builder: ((context, orders, child) => ListView.builder(
+                return Consumer<Orders>(builder: ((context, orders, child) {
+                  return orders.orders.length == 0
+                      ? Center(
+                          child: Text("No orders yet"),
+                        )
+                      : ListView.builder(
                           itemBuilder: (context, index) => OrderItem(
                             order: orders.orders[index],
                           ),
                           itemCount: orders.orders.length,
-                        )));
+                        );
+                }));
               }
             }
           },

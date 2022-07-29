@@ -15,10 +15,10 @@ class CartItem {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": this.id,
-      "title": this.title,
-      "quantity": this.quantity,
-      "price": this.price,
+      "id": id,
+      "title": title,
+      "quantity": quantity,
+      "price": price,
     };
   }
 }

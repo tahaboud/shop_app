@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
-import './products.dart';
 import './cart.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,6 +19,11 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  final String? authToken;
+  final String? userId;
+
+  Orders(this.authToken, this._orders, this.userId);
+
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
@@ -29,11 +32,12 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-        "https://fluttershopapp-c3ffb-default-rtdb.firebaseio.com/orders.json");
+        "https://fluttershopapp-c3ffb-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken");
     try {
       final response = await http.get(url);
+      if (jsonDecode(response.body) == null) return;
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
-      if (extractedData == null) return;
+
       final List<OrderItem> loadedOrders = [];
       final List<CartItem> orderProducts = [];
       extractedData.forEach((key, value) {
@@ -64,7 +68,7 @@ class Orders with ChangeNotifier {
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final timeStamp = DateTime.now();
     final url = Uri.parse(
-        "https://fluttershopapp-c3ffb-default-rtdb.firebaseio.com/orders.json");
+        "https://fluttershopapp-c3ffb-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken");
     try {
       final response = await http.post(url,
           body: jsonEncode({
@@ -77,7 +81,7 @@ class Orders with ChangeNotifier {
         OrderItem(
           id: jsonDecode(response.body)["name"],
           amount: total,
-          products: cartProducts as List<CartItem>,
+          products: cartProducts,
           dateTime: timeStamp,
         ),
       );

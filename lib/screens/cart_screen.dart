@@ -18,6 +18,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text("Your Cart")),
       body: Column(
@@ -64,11 +65,11 @@ class _CartScreenState extends State<CartScreen> {
                                     cart.totalAmount,
                                   );
                                   cart.clear();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Order placed")));
+                                  scaffoldMessenger.showSnackBar(const SnackBar(
+                                      content: Text("Order placed")));
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                           content:
                                               Text("Order failed to add")));
                                 }
@@ -81,8 +82,8 @@ class _CartScreenState extends State<CartScreen> {
                           primary: Colors.purple,
                         ),
                         child: _isLoading
-                            ? CircularProgressIndicator()
-                            : Text("ORDER NOW"),
+                            ? const CircularProgressIndicator()
+                            : const Text("ORDER NOW"),
                       ),
                     ])),
           ),

@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:http/http.dart';
 import '../providers/product.dart';
 import '../providers/products.dart';
 import 'package:provider/provider.dart';
