@@ -17,15 +17,15 @@ class UserProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: Text("Your Products"),
+        title: const Text("Your Products"),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(EditProductScreen.routeName);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
         ],
       ),
@@ -33,14 +33,14 @@ class UserProductsScreen extends StatelessWidget {
         future: _refreshProducts(context),
         builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
-                ? Center(
+                ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : RefreshIndicator(
                     onRefresh: () => _refreshProducts(context),
                     child: Consumer<Products>(
                       builder: (ctx, productsData, child) => Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: ListView.builder(
                           itemBuilder: (context, index) => Column(
                             children: [
@@ -49,7 +49,7 @@ class UserProductsScreen extends StatelessWidget {
                                 imageUrl: productsData.items[index].imageUrl,
                                 title: productsData.items[index].title,
                               ),
-                              Divider(),
+                              const Divider(),
                             ],
                           ),
                           itemCount: productsData.items.length,

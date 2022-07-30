@@ -20,7 +20,7 @@ class UserProductItem extends StatelessWidget {
       leading: CircleAvatar(
         backgroundImage: NetworkImage(imageUrl),
       ),
-      trailing: Container(
+      trailing: SizedBox(
         width: 100,
         child: Row(
           children: [
@@ -29,7 +29,7 @@ class UserProductItem extends StatelessWidget {
                 Navigator.of(context)
                     .pushNamed(EditProductScreen.routeName, arguments: id);
               },
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
@@ -38,11 +38,11 @@ class UserProductItem extends StatelessWidget {
                   await Provider.of<Products>(context, listen: false)
                       .deleteProduct(id);
                 } catch (e) {
-                  scaffold
-                      .showSnackBar(SnackBar(content: Text("Deleting Failed")));
+                  scaffold.showSnackBar(
+                      const SnackBar(content: Text("Deleting Failed")));
                 }
               },
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               color: Theme.of(context).errorColor,
             ),
           ],

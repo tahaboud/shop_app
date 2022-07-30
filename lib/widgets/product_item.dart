@@ -39,12 +39,14 @@ class ProductItem extends StatelessWidget {
                         await product.toggleFavoriteStatus(
                             authData.token as String,
                             authData.userId as String);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text("Item added to favorites"),
                         ));
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Some thing went wrong")));
+                            const SnackBar(
+                                content: Text("Some thing went wrong")));
                       }
                     },
                   )),
@@ -63,8 +65,8 @@ class ProductItem extends StatelessWidget {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Item added to cart"),
-                  duration: Duration(seconds: 2),
+                  content: const Text("Item added to cart"),
+                  duration: const Duration(seconds: 2),
                   action: SnackBarAction(
                     label: "UNDO",
                     onPressed: () {
@@ -81,9 +83,14 @@ class ProductItem extends StatelessWidget {
             Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
                 arguments: product.id);
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage("assets/images/product-placeholder.png"),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

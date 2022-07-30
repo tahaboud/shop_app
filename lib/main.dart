@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../helpers/custom_routes.dart';
 import './screens/splash_screen.dart';
 import './providers/auth.dart';
 import 'screens/auth_screen.dart';
@@ -46,6 +47,10 @@ class MyApp extends StatelessWidget {
             builder: (ctx, auth, child) => MaterialApp(
                   title: 'My Shop',
                   theme: ThemeData(
+                    pageTransitionsTheme: PageTransitionsTheme(builders: {
+                      TargetPlatform.android: CustomPageTransitionBuilder(),
+                      TargetPlatform.iOS: CustomPageTransitionBuilder(),
+                    }),
                     primarySwatch: Colors.purple,
                     fontFamily: "Lato",
                   ).copyWith(
@@ -59,7 +64,7 @@ class MyApp extends StatelessWidget {
                           builder: ((context, snapshot) =>
                               snapshot.connectionState ==
                                       ConnectionState.waiting
-                                  ? SplashScreen()
+                                  ? const SplashScreen()
                                   : const AuthScreen()),
                           future: auth.tryAutoLogin(),
                         ),

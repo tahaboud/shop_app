@@ -13,7 +13,6 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  var _isLoading = false;
   @override
   void initState() {
     // Future.delayed(Duration.zero).then((value) async {
@@ -40,19 +39,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
           future:
               Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
           builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting)
-              return Center(
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
                 child: CircularProgressIndicator(),
               );
-            else {
-              if (dataSnapshot.error != null)
-                return Center(
+            } else {
+              if (dataSnapshot.error != null) {
+                return const Center(
                   child: Text("An error occured"),
                 );
-              else {
+              } else {
                 return Consumer<Orders>(builder: ((context, orders, child) {
-                  return orders.orders.length == 0
-                      ? Center(
+                  return orders.orders.isEmpty
+                      ? const Center(
                           child: Text("No orders yet"),
                         )
                       : ListView.builder(
